@@ -6,7 +6,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class HelloResource {
@@ -44,8 +50,19 @@ public class HelloResource {
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
+
+
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
 
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?>  refreshToken(@RequestBody RefreshTokenRequest r){
+        System.out.println(r.getToken());
+        final String refreshToken = jwtTokenUtil.refreshToken(r.getToken());
+        Map<String,String> map = new HashMap<>();
+        map.put("token",refreshToken);
+        return ResponseEntity.ok(map);
     }
 
 

@@ -40,12 +40,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate").permitAll().
+                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .antMatchers("/refresh").permitAll().
                 anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
+
+    //
+//    @Override
+//    public void configure(WebSecurity webSecurity) throws Exception {
+//        webSecurity.ignoring().antMatchers(HttpMethod.POST, authenticationPath).antMatchers(HttpMethod.OPTIONS, "/**")
+//                .and().ignoring().antMatchers(HttpMethod.GET, "/" // Other Stuff You want to Ignore
+//        ).and().ignoring().antMatchers("/h2-console/**/**");// Should not be in Production!
+//    }
 
 }
